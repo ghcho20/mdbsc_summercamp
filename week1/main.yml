@@ -1,0 +1,27 @@
+---
+- name: Bootstrap MM Cluster
+  import_playbook: ../bootstrap.yml
+  vars:
+    target_group: rs-cluster
+
+- name: Set resolver
+  hosts: rs-cluster
+  gather_facts: no
+  tasks:
+    - name: Import set_resolver.yml
+      import_tasks: ../set_resolver.yml
+      vars:
+        add_hosts:
+          - 192.168.206.3 m1
+          - 192.168.206.4 m2
+          - 192.168.206.5 m3
+
+- name: Week1 main playbook
+  hosts: rs-cluster
+  gather_facts: no
+  roles:
+    - mongodb
+    - post_install
+    - rs_initiate
+    - users
+    - load_data

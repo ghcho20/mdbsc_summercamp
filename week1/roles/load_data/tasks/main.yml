@@ -1,0 +1,17 @@
+---
+- name: Load sample data
+  shell: |
+    rs_hosts="192.168.206.3,192.168.206.4,192.168.206.5" && \
+    mongorestore --drop \
+    --host=${rs_hosts} \
+    --port=27017 \
+    --username=pm \
+    --password=pm1234 \
+    --authenticationDatabase=admin \
+    --quiet \
+    load_data/data/dump
+  register: load_data_result
+  delegate_to: 127.0.0.1
+  become: false
+  when: inventory_hostname == groups['rs-cluster'][0]
+  failed_when: load_data_result.rc > 1

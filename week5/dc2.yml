@@ -1,0 +1,90 @@
+services:
+  m4:
+    build:
+      context: dimage
+      args:
+        - IARCH=${IARCH}
+        - EAVER=${EAVER}
+        - RSNAME=${RSNAME}
+    image: ${IARCH}/mongodb${EAVER}:ea
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+    container_name: m4
+    hostname: m4
+    privileged: true
+    platform: linux/${PARCH:-arm64}
+    environment:
+      - TZ=Asia/Seoul
+      - RSNAME=${RSNAME}
+    volumes:
+      - m4:/data
+    ulimits:
+      nofile: 64000
+      nproc: 64000
+      cpu: -1
+      as: -1
+      memlock: -1
+      fsize: -1
+
+  m5:
+    depends_on:
+      - m4
+    image: ${IARCH}/mongodb${EAVER}:ea
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+    container_name: m5
+    hostname: m5
+    privileged: true
+    platform: linux/${PARCH:-arm64}
+    environment:
+      - TZ=Asia/Seoul
+    volumes:
+      - m5:/data
+    ulimits:
+      nofile: 64000
+      nproc: 64000
+      cpu: -1
+      as: -1
+      memlock: -1
+      fsize: -1
+
+  m6:
+    depends_on:
+      - m5
+    image: ${IARCH}/mongodb${EAVER}:ea
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+    container_name: m6
+    hostname: m6
+    privileged: true
+    platform: linux/${PARCH:-arm64}
+    environment:
+      - TZ=Asia/Seoul
+    volumes:
+      - m6:/data
+    ulimits:
+      nofile: 64000
+      nproc: 64000
+      cpu: -1
+      as: -1
+      memlock: -1
+      fsize: -1
+
+networks:
+  default:
+    name: mdb_net
+    external: true
+
+volumes:
+  m4:
+  m5:
+  m6:

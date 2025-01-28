@@ -1,0 +1,60 @@
+---
+- name: RS Cluster bootstrap
+  hosts: "{{ target_group }}"
+  become: true
+  gather_facts: no
+  tasks:
+    # - name: check sudoers.d directory
+    #   stat:
+    #     path: /etc/sudoers.d/gcho
+    #   register: sudoers_d
+
+    # - name: make gcho sudoer
+    #   shell: "echo 'gcho ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/gcho"
+    #   args:
+    #     executable: /bin/bash
+    #   when: sudoers_d.stat.exists == False
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Check /data noatime
+      shell: "grep '/data' /etc/fstab | grep noatime"
+      register: noatime
+      ignore_errors: yes
+
+    - name: Make /data noatime
+      lineinfile:
+        path: /etc/fstab
+        regexp: "(^.+/data xfs defaults)(.+)$"
+        line: '\1,noatime\2'
+        backrefs: yes
+      when: noatime.stdout == ""
+
+    - name: Remount /data
+      command: mount -o remount /data
+      when: noatime.stdout == ""
+
+    - name: Adjust timezone
+      timezone:
+        name: Asia/Seoul
+
+    - name: Adjust readahead size to 32(16KB)
+      shell: "blockdev --setra 32 /dev/vdb"
+
+    - name: Adjust tcp_keepalive_time to 120
+      sysctl:
+        name: net.ipv4.tcp_keepalive_time
+        value: 120
+        sysctl_set: yes
+        state: present
+        reload: yes
+
+    - name: Adjust vm.max_map_count to 131060
+      sysctl:
+        name: vm.max_map_count
+        value: 131060
+        sysctl_set: yes
+        state: present
+        reload: yes

@@ -1,0 +1,27 @@
+[mm_cluster]
+on ansible_host=192.168.206.7
+o2 ansible_host=192.168.206.8
+o3 ansible_host=192.168.206.9
+
+[mm_cluster:vars]
+rs_hosts="{{ groups['mm_cluster'] }}"
+replSetName=mm-cluster
+
+[om]
+a1 ansible_host=192.168.206.11
+a2 ansible_host=192.168.206.12
+
+[om:vars]
+rs_hosts="{{ groups['mm_cluster'] }}"
+om_hosts="{{ groups['om'] }}"
+omCentralUrl=http://192.168.206.11:8080
+dbuser=pm
+dbpwd=pm1234
+
+[nx]
+on ansible_host=192.168.206.7 nx_backend='["192.168.206.11", "192.168.206.12"]'
+
+[all:vars]
+ansible_user=gcho
+ansible_become=true
+ansible_python_interpreter=/usr/bin/python3

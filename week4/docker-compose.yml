@@ -1,0 +1,107 @@
+services:
+  on:
+    build:
+      context: dimgoNsshd
+      args:
+        - IARCH=${IARCH}
+        - EAVER=${EAVER}
+    image: ${IARCH}/mongodb${EAVER}:onsd
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 6G
+    container_name: on
+    healthcheck:
+      test: ["CMD", "echo", ">", "/dev/tcp/on/22"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 2s
+    hostname: on
+    ports:
+      - "80:80"
+    privileged: true
+    platform: linux/${PARCH:-arm64}
+    environment:
+      - TZ=Asia/Seoul
+    volumes:
+      - week2_docker_on:/data
+    ulimits:
+      nofile: 64000
+      nproc: 64000
+      cpu: -1
+      as: -1
+      memlock: -1
+      fsize: -1
+
+  o2:
+    depends_on:
+      on:
+        condition: service_healthy
+    build:
+      context: dimgoMsshfs
+      args:
+        - IARCH=${IARCH}
+        - EAVER=${EAVER}
+    image: ${IARCH}/mongodb${EAVER}:omsf
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 12G
+    container_name: o2
+    hostname: o2
+    ports:
+      - "8082:8080"
+    privileged: true
+    platform: linux/${PARCH:-arm64}
+    environment:
+      - TZ=Asia/Seoul
+    volumes:
+      - week2_docker_o2:/data
+    ulimits:
+      nofile: 64000
+      nproc: 64000
+      cpu: -1
+      as: -1
+      memlock: -1
+      fsize: -1
+
+  o3:
+    image: ${IARCH}/mongodb${EAVER}:ob
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 12G
+    container_name: o3
+    hostname: o3
+    ports:
+      - "8083:8080"
+    privileged: true
+    platform: linux/${PARCH:-arm64}
+    environment:
+      - TZ=Asia/Seoul
+    volumes:
+      - week2_docker_o3:/data
+    ulimits:
+      nofile: 64000
+      nproc: 64000
+      cpu: -1
+      as: -1
+      memlock: -1
+      fsize: -1
+
+networks:
+  default:
+    name: mdb_net
+    external: true
+
+volumes:
+  week2_docker_on:
+    external: true
+  week2_docker_o2:
+    external: true
+  week2_docker_o3:
+    external: true

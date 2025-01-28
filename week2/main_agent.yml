@@ -1,0 +1,63 @@
+---
+- name: Provision OM Agents
+  hosts: rs_cluster
+  gather_facts: no
+
+  vars_prompt:
+    - name: omProjectId
+      prompt: Enter the OM Project ID
+      private: false
+      confirm: true
+
+    - name: omAgentApiKey
+      prompt: Enter the OM Agent API Key
+      private: false
+      confirm: true
+
+  tasks:
+    - name: Install OM Agent
+      apt:
+        deb: "{{ agentDownloadUrl }}"
+        state: present
+
+    - name: Configure OM Agent
+      lineinfile:
+        path: /etc/mongodb-mms/automation-agent.config
+        regex: "^{{ item.key }}="
+        line: "{{ item.key }}={{ item.value }}"
+      loop: "{{ config_items | dict2items }}"
+      vars:
+        config_items:
+          mmsGroupId: "{{ omProjectId }}"
+          mmsApiKey: "{{ omAgentApiKey }}"
+          mmsBaseUrl: "{{ mmsBaseUrl }}"
+          httpProxy: "{{ httpProxy }}"
+
+    - name: Set up /data folder
+      file:
+        path: /data
+        state: directory
+        owner: mongodb
+        group: mongodb
+        mode: "0755"
+
+    - name: Install dependencies
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - libcurl4
+        - libgssapi-krb5-2
+        - liblzma5
+        - libsasl2-2
+        - libsasl2-modules-gssapi-mit
+        - libsasl2-modules
+        - libwrap0
+        - openssl
+        - snmp
+
+    - name: Start OM Agent
+      service:
+        name: mongodb-mms-automation-agent
+        state: started
+        enabled: yes

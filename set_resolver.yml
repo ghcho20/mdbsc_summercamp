@@ -1,0 +1,13 @@
+---
+- name: Check hostname
+  shell: "grep '{{ add_hosts[0] }}' /etc/hosts"
+  register: check_hostname
+  failed_when: check_hostname.rc > 1
+
+- name: Add hostname to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    insertafter: "127.0.0.1"
+    line: "{{ item }}"
+  with_items: "{{ add_hosts }}"
+  when: check_hostname.rc == 1

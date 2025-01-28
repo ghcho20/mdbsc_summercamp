@@ -1,0 +1,36 @@
+---
+- name: set up dbPath
+  file:
+    path: /data
+    owner: mongodb
+    group: mongodb
+    mode: "0755"
+
+- name: change dbPath
+  lineinfile:
+    path: /etc/mongod.conf
+    regexp: "dbPath"
+    line: "  dbPath: /data"
+    state: present
+
+- name: enable remote connections
+  lineinfile:
+    path: /etc/mongod.conf
+    regexp: "bindIp"
+    line: "  bindIp: 0.0.0.0"
+    state: present
+
+- name: Copy THP service file
+  copy:
+    src: dis-thp.service
+    dest: /etc/systemd/system/disable-transparent-huge-pages.service
+
+- name: Reload service deamon
+  service:
+    daemon_reload: yes
+
+- name: Enable and start Disable THP service
+  service:
+    name: disable-transparent-huge-pages
+    state: started
+    enabled: yes

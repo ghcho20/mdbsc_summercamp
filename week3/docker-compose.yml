@@ -1,0 +1,15 @@
+services:
+  w3:
+    image: arm64v8/node
+    container_name: w3
+    hostname: w3
+    environment:
+      - TZ=Asia/Seoul
+    volumes:
+      - ./ingest:/nodeapp
+    command: ["/bin/bash", "-c", "sleep infinity"]
+
+networks:
+  default:
+    name: mdb_net
+    external: true

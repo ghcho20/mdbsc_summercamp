@@ -1,0 +1,92 @@
+---
+- name: Check OM status
+  stat:
+    path: /lib/systemd/system/mongodb-mms.service
+  register: res_om_install
+
+- name: Install OM
+  apt:
+    deb: https://downloads.mongodb.com/on-prem-mms/deb/mongodb-mms-7.0.11.500.20240830T1726Z.amd64.deb
+    state: present
+  when: res_om_install.stat.exists == False
+
+- name: Check mongoUri
+  shell: "grep '{{ dbuser }}:{{ dbpwd }}@' /opt/mongodb/mms/conf/conf-mms.properties"
+  register: check_mongoUri
+  failed_when: check_mongoUri.rc > 1
+
+- name: Configure mongoUri
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regex: "(^.+//)127.0.0.1:27017(.+$)"
+    line: '\1{{ dbuser }}:{{ dbpwd }}@{{ rs_hosts[0] }}:27017,{{ rs_hosts[1] }}:27017,{{ rs_hosts[2] }}:27017\2'
+    backrefs: yes
+  when: check_mongoUri.rc == 1
+
+- name: Configure OM to ignore the initial UI setup and to add remote clientIP
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    insertafter: "^mongo.ssl="
+    line: "{{ item }}"
+  with_items:
+    - "mms.centralUrl={{ omCentralUrl }}"
+    - "mms.remoteIp.header=x-forwarded-for"
+    - "mms.ignoreInitialUiSetup=true"
+  when: check_mongoUri.rc == 1
+
+# Java Heap constraint is only needed for OM80
+# - name: Check Java heap size
+#   shell: "grep 'MMS_HEAP_SIZE' /lib/systemd/system/mongodb-mms.service"
+#   register: check_javaHeap
+#   failed_when: check_javaHeap.rc > 1
+
+# - name: Hack - limit Java heap size for RAM-constrained environments
+#   lineinfile:
+#     path: /lib/systemd/system/mongodb-mms.service
+#     insertafter: '^\[Service\]'
+#     line: 'Environment="MMS_HEAP_SIZE=5120"'
+#   when: check_javaHeap.rc == 1
+
+- name: Start OM#1
+  service:
+    name: mongodb-mms
+    state: started
+    enabled: yes
+  when: check_mongoUri.rc == 1 and inventory_hostname == om_hosts[0]
+
+- name: Wait for OM#1 to start
+  stat:
+    path: /etc/mongodb-mms/gen.key
+  register: is_om1_ready
+  retries: 30
+  delay: 5
+  until: is_om1_ready.stat.exists
+  when: check_mongoUri.rc == 1 and inventory_hostname == om_hosts[0]
+
+# - name: Delete gen.key on OM#2
+#   file:
+#     path: /etc/mongodb-mms/gen.key
+#     state: absent
+#   when: check_mongoUri.rc == 1 and inventory_hostname == om_hosts[1]
+
+- name: Fetch gen.key from OM#1
+  fetch:
+    src: /etc/mongodb-mms/gen.key
+    dest: /tmp
+  when: check_mongoUri.rc == 1 and inventory_hostname == om_hosts[0]
+
+- name: Copy gen.key to OM#2
+  copy:
+    src: "/tmp/{{ om_hosts[0] }}/etc/mongodb-mms/gen.key"
+    dest: /etc/mongodb-mms/gen.key
+    owner: mongodb-mms
+    group: mongodb-mms
+    mode: 0600
+  when: inventory_hostname == om_hosts[1]
+
+- name: Start OM#2
+  service:
+    name: mongodb-mms
+    state: started
+    enabled: yes
+  when: check_mongoUri.rc == 1 and inventory_hostname == om_hosts[1]

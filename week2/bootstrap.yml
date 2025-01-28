@@ -1,0 +1,5 @@
+---
+- name: Bootstrap MM Cluster
+  import_playbook: ../bootstrap.yml
+  vars:
+    target_group: mm-cluster

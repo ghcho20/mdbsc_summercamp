@@ -1,0 +1,32 @@
+---
+- name: Discover RS primary
+  shell: |
+    mongosh --eval 'db.isMaster()' | grep 'primary'
+  register: rsPrimary
+  until: rsPrimary.stdout.find("primary") != -1
+  retries: 20
+  delay: 3
+
+- name: Check super user
+  shell: |
+    mongosh -u {{superUser}} -p {{superPwd}} --authenticationDatabase admin --eval "db.version()"
+  register: checkSuper
+  failed_when: checkSuper.rc !=0 and checkSuper.stderr.find("Authentication failed") == -1
+  when: inventory_hostname in rsPrimary.stdout
+
+- name: Create super user
+  shell: |
+    mongosh --eval '{{ superUserScript }}'
+  when: (inventory_hostname in rsPrimary.stdout) and (checkSuper.stderr.find("Authentication failed") != -1)
+
+- name: Check users
+  shell: |
+    mongosh "mongodb://{{ adminUser }}:{{ adminPwd }}@{{ inventory_hostname }}:27017/admin" --eval "db.version()"
+  register: checkUser
+  failed_when: checkUser.rc !=0 and checkUser.stderr.find("Authentication failed") == -1
+  when: inventory_hostname in rsPrimary.stdout
+
+- name: Create users
+  shell: |
+    mongosh "mongodb://{{superUser}}:{{superPwd}}@{{ inventory_hostname }}:27017/admin" --eval '{{ UsersScript }}'
+  when: (inventory_hostname in rsPrimary.stdout) and (checkUser.stderr.find("Authentication failed") != -1)

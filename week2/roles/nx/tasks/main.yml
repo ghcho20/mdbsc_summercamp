@@ -1,0 +1,39 @@
+---
+- name: Install Nginx
+  package:
+    name: nginx
+    state: present
+
+- name: Make a Nginx config file
+  copy:
+    dest: /etc/nginx/sites-available/nginx.cfg
+    content: |
+      upstream backend {
+        server {{ nx_backend[0] }}:8080;
+        server {{ nx_backend[1] }}:8080;
+      }
+
+      server {
+        listen 80;
+        server_name {{ ansible_host }};
+
+        location / {
+          proxy_set_header X-Forwarded-For $remote_addr;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header Host $http_host;
+          proxy_read_timeout 300s;
+          proxy_pass http://backend;
+        }
+      }
+
+- name: Create a synlink to the config file
+  file:
+    src: /etc/nginx/sites-available/nginx.cfg
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+
+- name: Start Nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes

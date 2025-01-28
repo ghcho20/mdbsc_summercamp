@@ -1,0 +1,14 @@
+[rs_cluster]
+m1 ansible_host=192.168.206.3
+m2 ansible_host=192.168.206.4
+m3 ansible_host=192.168.206.5
+
+[rs_cluster:vars]
+mmsBaseUrl=http://192.168.206.11:8080
+agentDownloadUrl="{{ mmsBaseUrl }}/download/agent/automation/mongodb-mms-automation-agent-manager_107.0.11.8645-1_arm64.ubuntu2204.deb"
+httpProxy=http://192.168.206.7:80
+
+[all:vars]
+ansible_user=gcho
+ansible_become=true
+ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,63 @@
+---
+- name: Bootstrap MM Cluster
+  import_playbook: ../bootstrap.yml
+  vars:
+    target_group: mm_cluster
+
+- name: Set resolver for MM Cluster
+  hosts: mm_cluster
+  gather_facts: no
+  tasks:
+    - name: Import set_resolver.yml
+      import_tasks: ../set_resolver.yml
+      vars:
+        add_hosts:
+          - 192.168.206.7 on
+          - 192.168.206.8 o2
+          - 192.168.206.9 o3
+
+- name: Week2 OM backing DB provision
+  hosts: mm_cluster
+  gather_facts: no
+  roles:
+    - mongodb
+    - post_install
+    - rs_initiate
+    - users
+
+- name: OM hosts bootstrap
+  hosts: om
+  gather_facts: no
+  tasks:
+    - name: Adjust timezone
+      timezone:
+        name: Asia/Seoul
+
+- name: Set resolver for OMs
+  hosts: om
+  gather_facts: no
+  tasks:
+    - name: Import set_resolver.yml
+      import_tasks: ../set_resolver.yml
+      vars:
+        add_hosts:
+          - 192.168.206.7 on
+          - 192.168.206.8 o2
+          - 192.168.206.9 o3
+          - 192.168.206.11 a1
+          - 192.168.206.12 a2
+          - 192.168.206.3 m1
+          - 192.168.206.4 m2
+          - 192.168.206.5 m3
+
+- name: OM provision
+  hosts: om
+  gather_facts: no
+  roles:
+    - om
+
+- name: Nginx provision
+  hosts: nx
+  gather_facts: no
+  roles:
+    - nx

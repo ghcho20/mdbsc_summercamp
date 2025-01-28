@@ -1,0 +1,23 @@
+pubkey=nqkiielb
+prikey=8ab44127-a876-4e4d-ad59-3cd9964c09a1
+groupid=6782cf28b2fc091aacd28ab4
+clusterid=6782e307b2fc091aacd2cdd3
+HDR="--user ${pubkey}:${prikey} --digest \
+--header 'Accept: application/json'"
+GHDR="http://o2:8080/api/public/v1.0"
+GTAIL="?pretty=true"
+
+function getProjects() {
+    curl ${HDR} --include --request GET \
+    ${GHDR}/groups${GTAIL}
+}
+
+function bakupConfigs() {
+    curl ${HDR} --include --request GET \
+    ${GHDR}/groups/${groupid}/backupConfigs${GTAIL}
+}
+
+function allSnapshots() {
+    curl ${HDR} --include --request GET \
+    ${GHDR}/groups/${groupid}/clusters/${clusterid}/snapshots${GTAIL}
+}

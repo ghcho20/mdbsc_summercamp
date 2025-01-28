@@ -1,0 +1,64 @@
+---
+- name: Check Ubuntu version
+  command: lsb_release -rs
+  register: ubuntu_version
+
+- name: Install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - curl
+    - gnupg
+
+- name: Check if MongoDB public GPG key exists
+  stat:
+    path: /usr/share/keyrings/mongodb-server-{{ mongodb_ea_version }}.gpg
+  register: mongodb_gpg_key
+
+- name: Import MongoDB public GPG key
+  shell: curl -fsSL https://pgp.mongodb.com/server-{{ mongodb_ea_version }}.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-{{ mongodb_ea_version }}.gpg --dearmor
+  args:
+    executable: /bin/bash
+  when: mongodb_gpg_key.stat.exists == False
+
+- name: Check repo. list
+  stat:
+    path: /etc/apt/sources.list.d/mongodb-enterprise-{{ mongodb_ea_version }}.list
+  register: mdb_repo_list
+
+- name: Check Ubuntu codename
+  command: lsb_release -cs
+  register: ubuntu_codename
+
+- name: Add mongodb repo
+  shell: "echo 'deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_ea_version }}.gpg ] https://repo.mongodb.com/apt/ubuntu {{ ubuntu_codename.stdout }}/mongodb-enterprise/{{ mongodb_ea_version }} multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-enterprise-{{ mongodb_ea_version }}.list"
+  args:
+    executable: /bin/bash
+  when: mdb_repo_list.stat.exists == False
+
+- name: Check openssl version
+  shell: openssl version | awk -F'.' '{print $1}' | awk '{print $2}'
+  register: openssl_version
+# - debug:
+#     var: openssl_version.stdout
+- name: Install MongoDB
+  package:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - mongodb-enterprise-database
+    - mongodb-enterprise-tools
+
+- name: Install Mongo Shell using system openssl 3
+  package:
+    name: mongodb-mongosh-shared-openssl3
+    state: present
+  when: openssl_version.stdout|int >= 3
+
+- name: Install Mongo Shell using system openssl 1.1
+  package:
+    name: mongodb-mongosh-shared-openssl11
+    state: present
+  when: openssl_version.stdout|int < 3

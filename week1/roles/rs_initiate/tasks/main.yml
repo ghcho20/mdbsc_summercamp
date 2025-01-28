@@ -1,0 +1,71 @@
+---
+# lineinfile does not work multiline 'line' parameter
+# it cannot guarantee the idempotency
+# that is, it always appends the 'line' to EOF
+- name: Check replSetName
+  shell: "grep 'replSetName:' /etc/mongod.conf"
+  register: checkReplSetName
+  ignore_errors: yes
+
+- name: Set replSetName
+  lineinfile:
+    path: /etc/mongod.conf
+    insertafter: "^#replication:"
+    line: "replication:\n  replSetName: {{ replSetName }}"
+  when: checkReplSetName.stdout == ""
+
+- name: Copy AuthKey
+  copy:
+    src: rsAuthKey
+    dest: /var/lib/mongodb/rsAuthKeyFile
+    owner: mongodb
+    group: mongodb
+    mode: "0600"
+
+- name: Check rsAuthKey
+  shell: "grep 'keyFile:' /etc/mongod.conf"
+  register: keyFile
+  ignore_errors: yes
+
+- name: Set rsAuthKey
+  lineinfile:
+    path: /etc/mongod.conf
+    insertafter: "^#security:"
+    line: "security:\n  keyFile: /var/lib/mongodb/rsAuthKeyFile\n  authorization: enabled"
+  when: keyFile.stdout == ""
+
+- name: Enable and start mongod
+  service:
+    name: mongod
+    enabled: yes
+    state: started
+
+- name: Check RS status
+  shell: |
+    mongosh --eval "rs.status()"
+  register: rsStatus
+  until: rsStatus.stderr.find("no") != -1
+  retries: 5
+  delay: 3
+  when: inventory_hostname == rs_hosts[0]
+  failed_when: rsStatus.rc > 1 and rsStatus.stderr.find("no") == -1
+
+- name: Initiate RS
+  vars:
+    replSetInitDoc: |
+      {
+        _id: '{{ replSetName }}',
+        version: 1,
+        members: [
+          { _id: 0, host: '{{ rs_hosts[0] }}:27017' },
+          { _id: 1, host: '{{ rs_hosts[1] }}:27017' },
+          { _id: 2, host: '{{ rs_hosts[2] }}:27017' }
+        ],
+        settings: {
+          heartbeatIntervalMillis: 30000,
+          heartbeatTimeoutSecs: 40,
+        }
+      }
+  shell: |
+    mongosh --eval "rs.initiate({{ replSetInitDoc }})"
+  when: inventory_hostname == rs_hosts[0] and (rsStatus.stderr.find("no") != -1)
