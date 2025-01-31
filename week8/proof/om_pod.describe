@@ -1,0 +1,964 @@
+Name:             ops-manager-0
+Namespace:        mongodb-operator
+Priority:         0
+Service Account:  mongodb-enterprise-ops-manager
+Node:             gke-master-operator-default-pool-0d21b54d-lc6m/10.178.0.43
+Start Time:       Fri, 31 Jan 2025 09:24:08 +0000
+Labels:           app=ops-manager-svc
+                  apps.kubernetes.io/pod-index=0
+                  controller=mongodb-enterprise-operator
+                  controller-revision-hash=ops-manager-b7df4ccf
+                  pod-anti-affinity=ops-manager
+                  statefulset.kubernetes.io/pod-name=ops-manager-0
+Annotations:      connectionStringHash: JSCJU75TADOESIXW7SBAB3FULE4RREOW7SNRGD4EYMO6DFQUFJXA
+Status:           Running
+IP:               10.24.1.6
+IPs:
+  IP:           10.24.1.6
+Controlled By:  StatefulSet/ops-manager
+Init Containers:
+  mongodb-enterprise-init-ops-manager:
+    Container ID:   containerd://6a7c0d5e50ca2723684ea9237ee8b5f6318f7df410f0836037bfa5e8091616c4
+    Image:          quay.io/mongodb/mongodb-enterprise-init-ops-manager:1.0.7
+    Image ID:       quay.io/mongodb/mongodb-enterprise-init-ops-manager@sha256:ccd96ab8af35fd20b38978154366b05b6dd179dd2c9b6da8bb285b353d47ce16
+    Port:           <none>
+    Host Port:      <none>
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 31 Jan 2025 09:24:09 +0000
+      Finished:     Fri, 31 Jan 2025 09:24:09 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /opt/scripts from ops-manager-scripts (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-g6hk5 (ro)
+Containers:
+  mongodb-ops-manager:
+    Container ID:  containerd://f456e237914dc3a676e0a79dae42d3161f62058a5cb91194ec11d26e04110b04
+    Image:         quay.io/mongodb/mongodb-enterprise-ops-manager:6.0.5
+    Image ID:      quay.io/mongodb/mongodb-enterprise-ops-manager@sha256:59f6137d775d4cc34b1a929919661dead33c01e8d8cd107e75fc867a6373a022
+    Port:          8080/TCP
+    Host Port:     0/TCP
+    Command:
+      /opt/scripts/docker-entry-point.sh
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:24:10 +0000
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      memory:  5G
+    Requests:
+      memory:   5G
+    Readiness:  http-get http://:8080/monitor/health delay=60s timeout=5s period=5s #success=1 #failure=12
+    Environment:
+      ENABLE_IRP:                             true
+      OM_PROP_automation_versions_directory:  /mongodb-ops-manager/mongodb-releases/
+      OM_PROP_automation_versions_source:     mongodb
+      OM_PROP_mms_adminEmailAddr:             support@example.com
+      OM_PROP_mms_centralUrl:                 http://34.64.174.7:8080
+      OM_PROP_mms_featureControls_enable:     true
+      OM_PROP_mms_fromEmailAddr:              support@example.com
+      OM_PROP_mms_ignoreInitialUiSetup:       true
+      OM_PROP_mms_mail_hostname:              example.com
+      OM_PROP_mms_mail_port:                  465
+      OM_PROP_mms_mail_ssl:                   false
+      OM_PROP_mms_mail_transport:             smtp
+      OM_PROP_mms_replyToEmailAddr:           support@example.com
+      CUSTOM_JAVA_MMS_UI_OPTS:                -Xmx4291m -Xms4291m
+      CUSTOM_JAVA_DAEMON_OPTS:                -Xmx4291m -Xms4291m -DDAEMON.DEBUG.PORT=8090
+    Mounts:
+      /mongodb-ops-manager/.mongodb-mms from gen-key (ro)
+      /mongodb-ops-manager/.mongodb-mms-connection-string from mongodb-uri (ro)
+      /opt/scripts from ops-manager-scripts (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-g6hk5 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  ops-manager-scripts:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  gen-key:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-gen-key
+    Optional:    false
+  mongodb-uri:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-connection-string
+    Optional:    false
+  kube-api-access-g6hk5:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                 From               Message
+  ----     ------     ----                ----               -------
+  Normal   Scheduled  54m                 default-scheduler  Successfully assigned mongodb-operator/ops-manager-0 to gke-master-operator-default-pool-0d21b54d-lc6m
+  Normal   Pulled     54m                 kubelet            Container image "quay.io/mongodb/mongodb-enterprise-init-ops-manager:1.0.7" already present on machine
+  Normal   Created    54m                 kubelet            Created container mongodb-enterprise-init-ops-manager
+  Normal   Started    54m                 kubelet            Started container mongodb-enterprise-init-ops-manager
+  Normal   Pulling    54m                 kubelet            Pulling image "quay.io/mongodb/mongodb-enterprise-ops-manager:6.0.5"
+  Normal   Pulled     54m                 kubelet            Successfully pulled image "quay.io/mongodb/mongodb-enterprise-ops-manager:6.0.5" in 676ms (676ms including waiting). Image size: 1551370705 bytes.
+  Normal   Created    54m                 kubelet            Created container mongodb-ops-manager
+  Normal   Started    54m                 kubelet            Started container mongodb-ops-manager
+  Warning  Unhealthy  52m (x13 over 53m)  kubelet            Readiness probe failed: Get "http://10.24.1.6:8080/monitor/health": dial tcp 10.24.1.6:8080: connect: connection refused
+
+Name:             ops-manager-backup-daemon-0
+Namespace:        mongodb-operator
+Priority:         0
+Service Account:  mongodb-enterprise-ops-manager
+Node:             gke-master-operator-default-pool-0d21b54d-5gds/10.178.0.45
+Start Time:       Fri, 31 Jan 2025 09:26:32 +0000
+Labels:           app=ops-manager-backup-daemon-svc
+                  apps.kubernetes.io/pod-index=0
+                  controller=mongodb-enterprise-operator
+                  controller-revision-hash=ops-manager-backup-daemon-5dbcb45fb
+                  pod-anti-affinity=ops-manager-backup-daemon
+                  statefulset.kubernetes.io/pod-name=ops-manager-backup-daemon-0
+Annotations:      connectionStringHash: JSCJU75TADOESIXW7SBAB3FULE4RREOW7SNRGD4EYMO6DFQUFJXA
+Status:           Running
+IP:               10.24.3.8
+IPs:
+  IP:           10.24.3.8
+Controlled By:  StatefulSet/ops-manager-backup-daemon
+Init Containers:
+  mongodb-enterprise-init-ops-manager:
+    Container ID:   containerd://7a04e4058de95e681807182f8349970f85d0b196de2314cef6876fad5fb43cdf
+    Image:          quay.io/mongodb/mongodb-enterprise-init-ops-manager:1.0.7
+    Image ID:       quay.io/mongodb/mongodb-enterprise-init-ops-manager@sha256:ccd96ab8af35fd20b38978154366b05b6dd179dd2c9b6da8bb285b353d47ce16
+    Port:           <none>
+    Host Port:      <none>
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 31 Jan 2025 09:26:35 +0000
+      Finished:     Fri, 31 Jan 2025 09:26:35 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /opt/scripts from ops-manager-scripts (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-l7cpg (ro)
+Containers:
+  mongodb-backup-daemon:
+    Container ID:  containerd://6925df5aeafe7351858e61cae509c05649568c82247dd2a0bdcd70baa6e2b6eb
+    Image:         quay.io/mongodb/mongodb-enterprise-ops-manager:6.0.5
+    Image ID:      quay.io/mongodb/mongodb-enterprise-ops-manager@sha256:59f6137d775d4cc34b1a929919661dead33c01e8d8cd107e75fc867a6373a022
+    Port:          8080/TCP
+    Host Port:     0/TCP
+    Command:
+      /opt/scripts/docker-entry-point.sh
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:26:37 +0000
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      memory:  5G
+    Requests:
+      memory:   5G
+    Liveness:   exec [/opt/scripts/backup-daemon-liveness-probe.sh] delay=10s timeout=5s period=30s #success=1 #failure=10
+    Readiness:  exec [/opt/scripts/backup-daemon-readiness-probe] delay=1s timeout=5s period=3s #success=1 #failure=3
+    Environment:
+      BACKUP_DAEMON:                          backup
+      HEALTH_ENDPOINT_PORT:                   8090
+      OM_PROP_automation_versions_directory:  /mongodb-ops-manager/mongodb-releases/
+      OM_PROP_automation_versions_source:     mongodb
+      OM_PROP_mms_adminEmailAddr:             support@example.com
+      OM_PROP_mms_centralUrl:                 http://34.64.174.7:8080
+      OM_PROP_mms_featureControls_enable:     true
+      OM_PROP_mms_fromEmailAddr:              support@example.com
+      OM_PROP_mms_ignoreInitialUiSetup:       true
+      OM_PROP_mms_mail_hostname:              example.com
+      OM_PROP_mms_mail_port:                  465
+      OM_PROP_mms_mail_ssl:                   false
+      OM_PROP_mms_mail_transport:             smtp
+      OM_PROP_mms_replyToEmailAddr:           support@example.com
+      CUSTOM_JAVA_MMS_UI_OPTS:                -Xmx4291m -Xms4291m
+      CUSTOM_JAVA_DAEMON_OPTS:                -Xmx4291m -Xms4291m -DDAEMON.DEBUG.PORT=8090
+    Mounts:
+      /head/ from head (rw)
+      /mongodb-ops-manager/.mongodb-mms from gen-key (ro)
+      /mongodb-ops-manager/.mongodb-mms-connection-string from mongodb-uri (ro)
+      /opt/scripts from ops-manager-scripts (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-l7cpg (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  head:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  head-ops-manager-backup-daemon-0
+    ReadOnly:   false
+  ops-manager-scripts:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  gen-key:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-gen-key
+    Optional:    false
+  mongodb-uri:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-connection-string
+    Optional:    false
+  kube-api-access-l7cpg:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                 From               Message
+  ----     ------     ----                ----               -------
+  Normal   Scheduled  51m                 default-scheduler  Successfully assigned mongodb-operator/ops-manager-backup-daemon-0 to gke-master-operator-default-pool-0d21b54d-5gds
+  Normal   Pulled     51m                 kubelet            Container image "quay.io/mongodb/mongodb-enterprise-init-ops-manager:1.0.7" already present on machine
+  Normal   Created    51m                 kubelet            Created container mongodb-enterprise-init-ops-manager
+  Normal   Started    51m                 kubelet            Started container mongodb-enterprise-init-ops-manager
+  Normal   Pulling    51m                 kubelet            Pulling image "quay.io/mongodb/mongodb-enterprise-ops-manager:6.0.5"
+  Normal   Pulled     51m                 kubelet            Successfully pulled image "quay.io/mongodb/mongodb-enterprise-ops-manager:6.0.5" in 653ms (653ms including waiting). Image size: 1551370705 bytes.
+  Normal   Created    51m                 kubelet            Created container mongodb-backup-daemon
+  Normal   Started    51m                 kubelet            Started container mongodb-backup-daemon
+  Warning  Unhealthy  50m (x16 over 51m)  kubelet            Readiness probe failed: attempting GET request to: [http://localhost:8090/health]
+error getting health response: failed to reach health endpoint: Get "http://localhost:8090/health": dial tcp 127.0.0.1:8090: connect: connection refused
+
+Name:             ops-manager-db-0
+Namespace:        mongodb-operator
+Priority:         0
+Service Account:  mongodb-enterprise-appdb
+Node:             gke-master-operator-default-pool-0d21b54d-l64f/10.178.0.44
+Start Time:       Fri, 31 Jan 2025 09:10:18 +0000
+Labels:           app=ops-manager-db-svc
+                  apps.kubernetes.io/pod-index=0
+                  controller=mongodb-enterprise-operator
+                  controller-revision-hash=ops-manager-db-744cc895cf
+                  pod-anti-affinity=ops-manager-db
+                  statefulset.kubernetes.io/pod-name=ops-manager-db-0
+Annotations:      agent.mongodb.com/version: 1
+Status:           Running
+IP:               10.24.2.13
+IPs:
+  IP:           10.24.2.13
+Controlled By:  StatefulSet/ops-manager-db
+Init Containers:
+  mongodb-enterprise-init-appdb:
+    Container ID:  containerd://47daecadc9df0207048d437129d7cc50da55020d2497d10e8f7de046dac349c4
+    Image:         quay.io/mongodb/mongodb-enterprise-init-appdb:1.0.10
+    Image ID:      quay.io/mongodb/mongodb-enterprise-init-appdb@sha256:793c3d5e50a5bfbb563ce7895fa63c85336bff502be645083151eb61d912ccdd
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/sh
+      -c
+      
+      
+      # the agent requires the readiness probe
+      cp /probes/readinessprobe /opt/scripts/readinessprobe
+      
+      # the mongod requires the version upgrade hook
+      cp /probes/version-upgrade-hook /hooks/version-upgrade
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 31 Jan 2025 09:10:43 +0000
+      Finished:     Fri, 31 Jan 2025 09:10:43 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /hooks from hooks (rw)
+      /opt/scripts from agent-scripts (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9lzhs (ro)
+Containers:
+  mongodb-agent:
+    Container ID:  containerd://f30fdb587141d15b8b7a6f0c32491a4200415174c0067c0968bb91fa03ee13e4
+    Image:         quay.io/mongodb/mongodb-agent:11.12.0.7388-1
+    Image ID:      quay.io/mongodb/mongodb-agent@sha256:8f94ce57a3fd65c9bc88a51aefdf4bb7eaa7d15ffc32566330e52eed77882a6c
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/bash
+      -c
+      current_uid=$(id -u)
+      AGENT_API_KEY="$(cat /mongodb-automation/agent-api-key/agentApiKey)"
+      declare -r current_uid
+      if ! grep -q "${current_uid}" /etc/passwd ; then
+      sed -e "s/^mongodb:/builder:/" /etc/passwd > /tmp/passwd
+      echo "mongodb:x:$(id -u):$(id -g):,,,:/:/bin/bash" >> /tmp/passwd
+      export NSS_WRAPPER_PASSWD=/tmp/passwd
+      export LD_PRELOAD=libnss_wrapper.so
+      export NSS_WRAPPER_GROUP=/etc/group
+      fi
+      agent/mongodb-agent -healthCheckFilePath=/var/log/mongodb-mms-automation/healthstatus/agent-health-status.json -serveStatusPort=5000 -cluster=/var/lib/automation/config/cluster-config.json -skipMongoStart -noDaemonize -useLocalMongoDbTools
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:10:53 +0000
+    Ready:          True
+    Restart Count:  0
+    Readiness:      exec [/opt/scripts/readinessprobe] delay=5s timeout=1s period=10s #success=1 #failure=40
+    Environment:
+      AGENT_STATUS_FILEPATH:  /var/log/mongodb-mms-automation/healthstatus/agent-health-status.json
+      AUTOMATION_CONFIG_MAP:  ops-manager-db-config
+      HEADLESS_AGENT:         true
+      POD_NAMESPACE:          mongodb-operator (v1:metadata.namespace)
+    Mounts:
+      /data from data (rw,path="data")
+      /journal from data (rw,path="journal")
+      /opt/scripts from agent-scripts (rw)
+      /var/lib/automation/config from automation-config (ro)
+      /var/lib/automation/config/acVersion from automation-config-goal-version (ro)
+      /var/lib/mongodb-automation/secrets/ca from secret-ca (ro)
+      /var/lib/mongodb-automation/secrets/certs from secret-certs (ro)
+      /var/lib/mongodb-mms-automation/authentication from ops-manager-db-keyfile (rw)
+      /var/log/mongodb-mms-automation from data (rw,path="logs")
+      /var/log/mongodb-mms-automation/healthstatus from healthstatus (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9lzhs (ro)
+  mongod:
+    Container ID:  containerd://9cbad3b56f1b4ed2c06f8bca6916e45e5a00767a84550292e20a58cd4bfc0b66
+    Image:         quay.io/mongodb/mongodb-enterprise-appdb-database:5.0.5-ent
+    Image ID:      quay.io/mongodb/mongodb-enterprise-appdb-database@sha256:08c1e1c9cfdc1821a0258baf2b07c844fa856f675435565c7571dd5013f6cd5d
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/sh
+      -c
+      
+      #run post-start hook to handle version changes
+      /hooks/version-upgrade
+      
+      # wait for config and keyfile to be created by the agent
+       while ! [ -f /data/automation-mongod.conf -a -f /var/lib/mongodb-mms-automation/authentication/keyfile ]; do sleep 3 ; done ; sleep 2 ;
+      
+      # start mongod with this configuration
+      exec mongod -f /data/automation-mongod.conf;
+      
+      
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:11:15 +0000
+    Ready:          True
+    Restart Count:  0
+    Requests:
+      memory:  500M
+    Environment:
+      AGENT_STATUS_FILEPATH:  /healthstatus/agent-health-status.json
+    Mounts:
+      /data from data (rw,path="data")
+      /healthstatus from healthstatus (rw)
+      /hooks from hooks (rw)
+      /journal from data (rw,path="journal")
+      /var/lib/mongodb-automation/secrets/ca from secret-ca (ro)
+      /var/lib/mongodb-automation/secrets/certs from secret-certs (ro)
+      /var/lib/mongodb-mms-automation/authentication from ops-manager-db-keyfile (rw)
+      /var/log/mongodb-mms-automation from data (rw,path="logs")
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9lzhs (ro)
+  mongodb-agent-monitoring:
+    Container ID:  containerd://dc4087254794801170cf67bcdad7cf80d26728fa321906bc3acf523ce64261ee
+    Image:         quay.io/mongodb/mongodb-agent:12.0.4.7554-1
+    Image ID:      quay.io/mongodb/mongodb-agent@sha256:11f7c55da4b93d54cf76e23aa2ceb03a7c590ab02dc5953cbbf4e99b37cf2aeb
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/bash
+      -c
+      current_uid=$(id -u)
+      AGENT_API_KEY="$(cat /mongodb-automation/agent-api-key/agentApiKey)"
+      declare -r current_uid
+      if ! grep -q "${current_uid}" /etc/passwd ; then
+      sed -e "s/^mongodb:/builder:/" /etc/passwd > /tmp/passwd
+      echo "mongodb:x:$(id -u):$(id -g):,,,:/:/bin/bash" >> /tmp/passwd
+      export NSS_WRAPPER_PASSWD=/tmp/passwd
+      export LD_PRELOAD=libnss_wrapper.so
+      export NSS_WRAPPER_GROUP=/etc/group
+      fi
+      agent/mongodb-agent -healthCheckFilePath=/var/log/mongodb-mms-automation/healthstatus/agent-health-status.json -serveStatusPort=5000 -cluster /var/lib/automation/config/cluster-config.json -mmsApiKey=${AGENT_API_KEY} -mmsGroupId=679c92e0e3abf21a0933f8c0
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:11:27 +0000
+    Ready:          True
+    Restart Count:  0
+    Readiness:      exec [/opt/scripts/readinessprobe] delay=5s timeout=1s period=10s #success=1 #failure=40
+    Environment:
+      AGENT_STATUS_FILEPATH:  /var/log/mongodb-mms-automation/healthstatus/agent-health-status.json
+      AUTOMATION_CONFIG_MAP:  ops-manager-db-config
+      HEADLESS_AGENT:         true
+      POD_NAMESPACE:          mongodb-operator (v1:metadata.namespace)
+    Mounts:
+      /data from data (rw,path="data")
+      /journal from data (rw,path="journal")
+      /mongodb-automation/agent-api-key from agent-api-key (rw)
+      /opt/scripts from agent-scripts (rw)
+      /var/lib/automation/config from monitoring-automation-config (ro)
+      /var/lib/automation/config/acVersion from monitoring-automation-config-goal-version (ro)
+      /var/lib/mongodb-automation/secrets/ca from secret-ca (ro)
+      /var/lib/mongodb-automation/secrets/certs from secret-certs (ro)
+      /var/lib/mongodb-mms-automation/authentication from ops-manager-db-keyfile (rw)
+      /var/log/mongodb-mms-automation from data (rw,path="logs")
+      /var/log/mongodb-mms-automation/healthstatus from healthstatus (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9lzhs (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  data:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  data-ops-manager-db-0
+    ReadOnly:   false
+  healthstatus:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  hooks:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  automation-config:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-config
+    Optional:    false
+  agent-scripts:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  ops-manager-db-keyfile:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  automation-config-goal-version:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      ops-manager-db-automation-config-version
+    Optional:  false
+  agent-api-key:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  679c92e0e3abf21a0933f8c0-group-secret
+    Optional:    false
+  monitoring-automation-config:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-monitoring-config
+    Optional:    false
+  monitoring-automation-config-goal-version:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      ops-manager-db-monitoring-automation-config-version
+    Optional:  false
+  secret-certs:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-cert-pem
+    Optional:    true
+  secret-ca:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      ops-manager-db-ca
+    Optional:  true
+  kube-api-access-9lzhs:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>
+
+Name:             ops-manager-db-1
+Namespace:        mongodb-operator
+Priority:         0
+Service Account:  mongodb-enterprise-appdb
+Node:             gke-master-operator-default-pool-0d21b54d-czz3/10.178.0.42
+Start Time:       Fri, 31 Jan 2025 09:09:23 +0000
+Labels:           app=ops-manager-db-svc
+                  apps.kubernetes.io/pod-index=1
+                  controller=mongodb-enterprise-operator
+                  controller-revision-hash=ops-manager-db-744cc895cf
+                  pod-anti-affinity=ops-manager-db
+                  statefulset.kubernetes.io/pod-name=ops-manager-db-1
+Annotations:      agent.mongodb.com/version: 1
+Status:           Running
+IP:               10.24.0.6
+IPs:
+  IP:           10.24.0.6
+Controlled By:  StatefulSet/ops-manager-db
+Init Containers:
+  mongodb-enterprise-init-appdb:
+    Container ID:  containerd://739dc8a841bc85c69d0e9eaf8db457f065c360f14caf1a169a6c867a3f6bbcda
+    Image:         quay.io/mongodb/mongodb-enterprise-init-appdb:1.0.10
+    Image ID:      quay.io/mongodb/mongodb-enterprise-init-appdb@sha256:793c3d5e50a5bfbb563ce7895fa63c85336bff502be645083151eb61d912ccdd
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/sh
+      -c
+      
+      
+      # the agent requires the readiness probe
+      cp /probes/readinessprobe /opt/scripts/readinessprobe
+      
+      # the mongod requires the version upgrade hook
+      cp /probes/version-upgrade-hook /hooks/version-upgrade
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 31 Jan 2025 09:09:24 +0000
+      Finished:     Fri, 31 Jan 2025 09:09:24 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /hooks from hooks (rw)
+      /opt/scripts from agent-scripts (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-rrgcx (ro)
+Containers:
+  mongodb-agent:
+    Container ID:  containerd://6638be2902529677252cf32e4d920f83829114fe2b45c1a39964df659b3d1b72
+    Image:         quay.io/mongodb/mongodb-agent:11.12.0.7388-1
+    Image ID:      quay.io/mongodb/mongodb-agent@sha256:8f94ce57a3fd65c9bc88a51aefdf4bb7eaa7d15ffc32566330e52eed77882a6c
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/bash
+      -c
+      current_uid=$(id -u)
+      AGENT_API_KEY="$(cat /mongodb-automation/agent-api-key/agentApiKey)"
+      declare -r current_uid
+      if ! grep -q "${current_uid}" /etc/passwd ; then
+      sed -e "s/^mongodb:/builder:/" /etc/passwd > /tmp/passwd
+      echo "mongodb:x:$(id -u):$(id -g):,,,:/:/bin/bash" >> /tmp/passwd
+      export NSS_WRAPPER_PASSWD=/tmp/passwd
+      export LD_PRELOAD=libnss_wrapper.so
+      export NSS_WRAPPER_GROUP=/etc/group
+      fi
+      agent/mongodb-agent -healthCheckFilePath=/var/log/mongodb-mms-automation/healthstatus/agent-health-status.json -serveStatusPort=5000 -cluster=/var/lib/automation/config/cluster-config.json -skipMongoStart -noDaemonize -useLocalMongoDbTools
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:09:26 +0000
+    Ready:          True
+    Restart Count:  0
+    Readiness:      exec [/opt/scripts/readinessprobe] delay=5s timeout=1s period=10s #success=1 #failure=40
+    Environment:
+      AGENT_STATUS_FILEPATH:  /var/log/mongodb-mms-automation/healthstatus/agent-health-status.json
+      AUTOMATION_CONFIG_MAP:  ops-manager-db-config
+      HEADLESS_AGENT:         true
+      POD_NAMESPACE:          mongodb-operator (v1:metadata.namespace)
+    Mounts:
+      /data from data (rw,path="data")
+      /journal from data (rw,path="journal")
+      /opt/scripts from agent-scripts (rw)
+      /var/lib/automation/config from automation-config (ro)
+      /var/lib/automation/config/acVersion from automation-config-goal-version (ro)
+      /var/lib/mongodb-automation/secrets/ca from secret-ca (ro)
+      /var/lib/mongodb-automation/secrets/certs from secret-certs (ro)
+      /var/lib/mongodb-mms-automation/authentication from ops-manager-db-keyfile (rw)
+      /var/log/mongodb-mms-automation from data (rw,path="logs")
+      /var/log/mongodb-mms-automation/healthstatus from healthstatus (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-rrgcx (ro)
+  mongod:
+    Container ID:  containerd://22fc5441c677fbf9a69d7786d9c5047a8fda1cf544a25602c4967de0710ee798
+    Image:         quay.io/mongodb/mongodb-enterprise-appdb-database:5.0.5-ent
+    Image ID:      quay.io/mongodb/mongodb-enterprise-appdb-database@sha256:08c1e1c9cfdc1821a0258baf2b07c844fa856f675435565c7571dd5013f6cd5d
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/sh
+      -c
+      
+      #run post-start hook to handle version changes
+      /hooks/version-upgrade
+      
+      # wait for config and keyfile to be created by the agent
+       while ! [ -f /data/automation-mongod.conf -a -f /var/lib/mongodb-mms-automation/authentication/keyfile ]; do sleep 3 ; done ; sleep 2 ;
+      
+      # start mongod with this configuration
+      exec mongod -f /data/automation-mongod.conf;
+      
+      
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:09:26 +0000
+    Ready:          True
+    Restart Count:  0
+    Requests:
+      memory:  500M
+    Environment:
+      AGENT_STATUS_FILEPATH:  /healthstatus/agent-health-status.json
+    Mounts:
+      /data from data (rw,path="data")
+      /healthstatus from healthstatus (rw)
+      /hooks from hooks (rw)
+      /journal from data (rw,path="journal")
+      /var/lib/mongodb-automation/secrets/ca from secret-ca (ro)
+      /var/lib/mongodb-automation/secrets/certs from secret-certs (ro)
+      /var/lib/mongodb-mms-automation/authentication from ops-manager-db-keyfile (rw)
+      /var/log/mongodb-mms-automation from data (rw,path="logs")
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-rrgcx (ro)
+  mongodb-agent-monitoring:
+    Container ID:  containerd://7bb99c87d9c07a11177ee806ac216e0183ed0ba2f80c28d3238105f5a0f9ae1e
+    Image:         quay.io/mongodb/mongodb-agent:12.0.4.7554-1
+    Image ID:      quay.io/mongodb/mongodb-agent@sha256:11f7c55da4b93d54cf76e23aa2ceb03a7c590ab02dc5953cbbf4e99b37cf2aeb
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/bash
+      -c
+      current_uid=$(id -u)
+      AGENT_API_KEY="$(cat /mongodb-automation/agent-api-key/agentApiKey)"
+      declare -r current_uid
+      if ! grep -q "${current_uid}" /etc/passwd ; then
+      sed -e "s/^mongodb:/builder:/" /etc/passwd > /tmp/passwd
+      echo "mongodb:x:$(id -u):$(id -g):,,,:/:/bin/bash" >> /tmp/passwd
+      export NSS_WRAPPER_PASSWD=/tmp/passwd
+      export LD_PRELOAD=libnss_wrapper.so
+      export NSS_WRAPPER_GROUP=/etc/group
+      fi
+      agent/mongodb-agent -healthCheckFilePath=/var/log/mongodb-mms-automation/healthstatus/agent-health-status.json -serveStatusPort=5000 -cluster /var/lib/automation/config/cluster-config.json -mmsApiKey=${AGENT_API_KEY} -mmsGroupId=679c92e0e3abf21a0933f8c0
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:09:40 +0000
+    Ready:          True
+    Restart Count:  0
+    Readiness:      exec [/opt/scripts/readinessprobe] delay=5s timeout=1s period=10s #success=1 #failure=40
+    Environment:
+      AGENT_STATUS_FILEPATH:  /var/log/mongodb-mms-automation/healthstatus/agent-health-status.json
+      AUTOMATION_CONFIG_MAP:  ops-manager-db-config
+      HEADLESS_AGENT:         true
+      POD_NAMESPACE:          mongodb-operator (v1:metadata.namespace)
+    Mounts:
+      /data from data (rw,path="data")
+      /journal from data (rw,path="journal")
+      /mongodb-automation/agent-api-key from agent-api-key (rw)
+      /opt/scripts from agent-scripts (rw)
+      /var/lib/automation/config from monitoring-automation-config (ro)
+      /var/lib/automation/config/acVersion from monitoring-automation-config-goal-version (ro)
+      /var/lib/mongodb-automation/secrets/ca from secret-ca (ro)
+      /var/lib/mongodb-automation/secrets/certs from secret-certs (ro)
+      /var/lib/mongodb-mms-automation/authentication from ops-manager-db-keyfile (rw)
+      /var/log/mongodb-mms-automation from data (rw,path="logs")
+      /var/log/mongodb-mms-automation/healthstatus from healthstatus (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-rrgcx (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  data:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  data-ops-manager-db-1
+    ReadOnly:   false
+  healthstatus:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  hooks:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  automation-config:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-config
+    Optional:    false
+  agent-scripts:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  ops-manager-db-keyfile:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  automation-config-goal-version:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      ops-manager-db-automation-config-version
+    Optional:  false
+  agent-api-key:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  679c92e0e3abf21a0933f8c0-group-secret
+    Optional:    false
+  monitoring-automation-config:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-monitoring-config
+    Optional:    false
+  monitoring-automation-config-goal-version:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      ops-manager-db-monitoring-automation-config-version
+    Optional:  false
+  secret-certs:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-cert-pem
+    Optional:    true
+  secret-ca:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      ops-manager-db-ca
+    Optional:  true
+  kube-api-access-rrgcx:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>
+
+Name:             ops-manager-db-2
+Namespace:        mongodb-operator
+Priority:         0
+Service Account:  mongodb-enterprise-appdb
+Node:             gke-master-operator-default-pool-0d21b54d-5gds/10.178.0.45
+Start Time:       Fri, 31 Jan 2025 09:08:10 +0000
+Labels:           app=ops-manager-db-svc
+                  apps.kubernetes.io/pod-index=2
+                  controller=mongodb-enterprise-operator
+                  controller-revision-hash=ops-manager-db-744cc895cf
+                  pod-anti-affinity=ops-manager-db
+                  statefulset.kubernetes.io/pod-name=ops-manager-db-2
+Annotations:      agent.mongodb.com/version: 1
+Status:           Running
+IP:               10.24.3.6
+IPs:
+  IP:           10.24.3.6
+Controlled By:  StatefulSet/ops-manager-db
+Init Containers:
+  mongodb-enterprise-init-appdb:
+    Container ID:  containerd://3c75ad0a57e8a9b167246a3aef16448563876d0f1505b4515e80f11c4d4dafe9
+    Image:         quay.io/mongodb/mongodb-enterprise-init-appdb:1.0.10
+    Image ID:      quay.io/mongodb/mongodb-enterprise-init-appdb@sha256:793c3d5e50a5bfbb563ce7895fa63c85336bff502be645083151eb61d912ccdd
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/sh
+      -c
+      
+      
+      # the agent requires the readiness probe
+      cp /probes/readinessprobe /opt/scripts/readinessprobe
+      
+      # the mongod requires the version upgrade hook
+      cp /probes/version-upgrade-hook /hooks/version-upgrade
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 31 Jan 2025 09:08:16 +0000
+      Finished:     Fri, 31 Jan 2025 09:08:16 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /hooks from hooks (rw)
+      /opt/scripts from agent-scripts (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-kp5hd (ro)
+Containers:
+  mongodb-agent:
+    Container ID:  containerd://955894c08b2505a453257e486ea154fe7cd81acfab414320ea0b1139b516952e
+    Image:         quay.io/mongodb/mongodb-agent:11.12.0.7388-1
+    Image ID:      quay.io/mongodb/mongodb-agent@sha256:8f94ce57a3fd65c9bc88a51aefdf4bb7eaa7d15ffc32566330e52eed77882a6c
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/bash
+      -c
+      current_uid=$(id -u)
+      AGENT_API_KEY="$(cat /mongodb-automation/agent-api-key/agentApiKey)"
+      declare -r current_uid
+      if ! grep -q "${current_uid}" /etc/passwd ; then
+      sed -e "s/^mongodb:/builder:/" /etc/passwd > /tmp/passwd
+      echo "mongodb:x:$(id -u):$(id -g):,,,:/:/bin/bash" >> /tmp/passwd
+      export NSS_WRAPPER_PASSWD=/tmp/passwd
+      export LD_PRELOAD=libnss_wrapper.so
+      export NSS_WRAPPER_GROUP=/etc/group
+      fi
+      agent/mongodb-agent -healthCheckFilePath=/var/log/mongodb-mms-automation/healthstatus/agent-health-status.json -serveStatusPort=5000 -cluster=/var/lib/automation/config/cluster-config.json -skipMongoStart -noDaemonize -useLocalMongoDbTools
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:08:18 +0000
+    Ready:          True
+    Restart Count:  0
+    Readiness:      exec [/opt/scripts/readinessprobe] delay=5s timeout=1s period=10s #success=1 #failure=40
+    Environment:
+      AGENT_STATUS_FILEPATH:  /var/log/mongodb-mms-automation/healthstatus/agent-health-status.json
+      AUTOMATION_CONFIG_MAP:  ops-manager-db-config
+      HEADLESS_AGENT:         true
+      POD_NAMESPACE:          mongodb-operator (v1:metadata.namespace)
+    Mounts:
+      /data from data (rw,path="data")
+      /journal from data (rw,path="journal")
+      /opt/scripts from agent-scripts (rw)
+      /var/lib/automation/config from automation-config (ro)
+      /var/lib/automation/config/acVersion from automation-config-goal-version (ro)
+      /var/lib/mongodb-automation/secrets/ca from secret-ca (ro)
+      /var/lib/mongodb-automation/secrets/certs from secret-certs (ro)
+      /var/lib/mongodb-mms-automation/authentication from ops-manager-db-keyfile (rw)
+      /var/log/mongodb-mms-automation from data (rw,path="logs")
+      /var/log/mongodb-mms-automation/healthstatus from healthstatus (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-kp5hd (ro)
+  mongod:
+    Container ID:  containerd://2d9d12e3558acec88cc4204fb598119337213f313c8fc621a25c6a1efe7a65db
+    Image:         quay.io/mongodb/mongodb-enterprise-appdb-database:5.0.5-ent
+    Image ID:      quay.io/mongodb/mongodb-enterprise-appdb-database@sha256:08c1e1c9cfdc1821a0258baf2b07c844fa856f675435565c7571dd5013f6cd5d
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/sh
+      -c
+      
+      #run post-start hook to handle version changes
+      /hooks/version-upgrade
+      
+      # wait for config and keyfile to be created by the agent
+       while ! [ -f /data/automation-mongod.conf -a -f /var/lib/mongodb-mms-automation/authentication/keyfile ]; do sleep 3 ; done ; sleep 2 ;
+      
+      # start mongod with this configuration
+      exec mongod -f /data/automation-mongod.conf;
+      
+      
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:08:18 +0000
+    Ready:          True
+    Restart Count:  0
+    Requests:
+      memory:  500M
+    Environment:
+      AGENT_STATUS_FILEPATH:  /healthstatus/agent-health-status.json
+    Mounts:
+      /data from data (rw,path="data")
+      /healthstatus from healthstatus (rw)
+      /hooks from hooks (rw)
+      /journal from data (rw,path="journal")
+      /var/lib/mongodb-automation/secrets/ca from secret-ca (ro)
+      /var/lib/mongodb-automation/secrets/certs from secret-certs (ro)
+      /var/lib/mongodb-mms-automation/authentication from ops-manager-db-keyfile (rw)
+      /var/log/mongodb-mms-automation from data (rw,path="logs")
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-kp5hd (ro)
+  mongodb-agent-monitoring:
+    Container ID:  containerd://dd5491b9c199a14c03a85d4cb50ccc78086a7795bcd99df07af18cb55b6a17cc
+    Image:         quay.io/mongodb/mongodb-agent:12.0.4.7554-1
+    Image ID:      quay.io/mongodb/mongodb-agent@sha256:11f7c55da4b93d54cf76e23aa2ceb03a7c590ab02dc5953cbbf4e99b37cf2aeb
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/bash
+      -c
+      current_uid=$(id -u)
+      AGENT_API_KEY="$(cat /mongodb-automation/agent-api-key/agentApiKey)"
+      declare -r current_uid
+      if ! grep -q "${current_uid}" /etc/passwd ; then
+      sed -e "s/^mongodb:/builder:/" /etc/passwd > /tmp/passwd
+      echo "mongodb:x:$(id -u):$(id -g):,,,:/:/bin/bash" >> /tmp/passwd
+      export NSS_WRAPPER_PASSWD=/tmp/passwd
+      export LD_PRELOAD=libnss_wrapper.so
+      export NSS_WRAPPER_GROUP=/etc/group
+      fi
+      agent/mongodb-agent -healthCheckFilePath=/var/log/mongodb-mms-automation/healthstatus/agent-health-status.json -serveStatusPort=5000 -cluster /var/lib/automation/config/cluster-config.json -mmsApiKey=${AGENT_API_KEY} -mmsGroupId=679c92e0e3abf21a0933f8c0
+    State:          Running
+      Started:      Fri, 31 Jan 2025 09:09:01 +0000
+    Ready:          True
+    Restart Count:  0
+    Readiness:      exec [/opt/scripts/readinessprobe] delay=5s timeout=1s period=10s #success=1 #failure=40
+    Environment:
+      AGENT_STATUS_FILEPATH:  /var/log/mongodb-mms-automation/healthstatus/agent-health-status.json
+      AUTOMATION_CONFIG_MAP:  ops-manager-db-config
+      HEADLESS_AGENT:         true
+      POD_NAMESPACE:          mongodb-operator (v1:metadata.namespace)
+    Mounts:
+      /data from data (rw,path="data")
+      /journal from data (rw,path="journal")
+      /mongodb-automation/agent-api-key from agent-api-key (rw)
+      /opt/scripts from agent-scripts (rw)
+      /var/lib/automation/config from monitoring-automation-config (ro)
+      /var/lib/automation/config/acVersion from monitoring-automation-config-goal-version (ro)
+      /var/lib/mongodb-automation/secrets/ca from secret-ca (ro)
+      /var/lib/mongodb-automation/secrets/certs from secret-certs (ro)
+      /var/lib/mongodb-mms-automation/authentication from ops-manager-db-keyfile (rw)
+      /var/log/mongodb-mms-automation from data (rw,path="logs")
+      /var/log/mongodb-mms-automation/healthstatus from healthstatus (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-kp5hd (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  data:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  data-ops-manager-db-2
+    ReadOnly:   false
+  healthstatus:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  hooks:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  automation-config:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-config
+    Optional:    false
+  agent-scripts:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  ops-manager-db-keyfile:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  automation-config-goal-version:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      ops-manager-db-automation-config-version
+    Optional:  false
+  agent-api-key:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  679c92e0e3abf21a0933f8c0-group-secret
+    Optional:    false
+  monitoring-automation-config:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-monitoring-config
+    Optional:    false
+  monitoring-automation-config-goal-version:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      ops-manager-db-monitoring-automation-config-version
+    Optional:  false
+  secret-certs:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ops-manager-db-cert-pem
+    Optional:    true
+  secret-ca:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      ops-manager-db-ca
+    Optional:  true
+  kube-api-access-kp5hd:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>
+

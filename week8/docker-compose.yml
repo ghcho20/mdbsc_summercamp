@@ -1,0 +1,10 @@
+services:
+  gcloud:
+    build:
+      context: dimage
+    image: gcloud-cli:plus
+    container_name: gcli
+    hostname: gcli
+    command: "sleep infinity"
+    volumes:
+      - ./scripts:/root/gcloud

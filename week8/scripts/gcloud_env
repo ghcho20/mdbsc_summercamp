@@ -1,0 +1,17 @@
+PRNAME=scsc-w8-gcho
+# prerequisite: gcloud auth login
+GCLI_AUTH=
+
+# K8S
+CLUSTER_NAME=master-operator
+ZONE=asia-northeast3-a
+K8S_VERSION=1.30
+MACHINE=n2-standard-2
+
+# Helm
+NAMESPACE=mongodb-operator
+HELM_CHART_VERSION=1.16.3
+
+# OM
+OM_VERSION=6.0.5
+APPDB_VERSION=5.0.5-ent
