@@ -13,6 +13,8 @@ services:
           cpus: "2.0"
           memory: 2048M
     container_name: m1
+    ports:
+      - "27017:27017"
     hostname: m1
     privileged: true
     platform: linux/${PARCH:-arm64}
@@ -39,6 +41,8 @@ services:
           cpus: "2.0"
           memory: 2048M
     container_name: m2
+    ports:
+      - "27018:27017"
     hostname: m2
     privileged: true
     platform: linux/${PARCH:-arm64}
@@ -64,6 +68,8 @@ services:
           cpus: "2.0"
           memory: 2048M
     container_name: m3
+    ports:
+      - "27019:27017"
     hostname: m3
     privileged: true
     platform: linux/${PARCH:-arm64}
